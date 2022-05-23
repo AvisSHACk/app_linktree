@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { auth, createUserWithEmailAndPassword } from "./../firebase/firebaseConfig";
+import { db, auth, createUserWithEmailAndPassword, doc, setDoc } from "./../firebase/firebaseConfig";
 
 const Registro = () => {
     const [correo, cambiarCorreo] = useState('');
@@ -18,7 +18,10 @@ const Registro = () => {
         }
 
         try {
-            await createUserWithEmailAndPassword(auth, correo, password);
+            const infoUsuario = await createUserWithEmailAndPassword(auth, correo, password);
+            console.log(infoUsuario.user.uid);
+            const docuRef = doc(db, `usuarios/${infoUsuario.user.uid}`);
+            setDoc(docuRef, {correo:correo, photo:'man-300x300.png'})
             history('/');
         } catch (error) {
             console.log(error.code);
