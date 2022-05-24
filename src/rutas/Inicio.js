@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import {  useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { storage, ref, getDownloadURL, auth, signOut} from "../firebase/firebaseConfig";
 import { useAuth } from "../hooks/authContext";
@@ -8,22 +8,21 @@ const Inicio = () => {
     const [usuario, cambiarUsuario] = useState();
     const history = useNavigate();
     const usuarioLogeado = useAuth();
-
     const datosUsuarioLogeado = useObtenerUsuarioLogeado(usuarioLogeado.usuario.uid);
+    
     useEffect(() => {
-        const obtenerUrl = async () => {
-            const user = datosUsuarioLogeado;
-            if(user) {
-                const url = await getDownloadURL(ref(storage, user.data().photo));
+        const guardarDatosUsuario = async () => {
+            const url = await getDownloadURL(ref(storage, datosUsuarioLogeado.data().photo));
+            if(datosUsuarioLogeado) {
                 cambiarUsuario({
-                    correo: user.correo,
+                    correo: datosUsuarioLogeado.data().correo,
                     photo: url
                 });
             }
         }
 
-        obtenerUrl();
-
+        guardarDatosUsuario()
+        
     }, [datosUsuarioLogeado])
 
     const cerrarSesion = () => {
