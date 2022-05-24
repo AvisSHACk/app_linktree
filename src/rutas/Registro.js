@@ -1,18 +1,29 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { db, auth, createUserWithEmailAndPassword, doc, setDoc } from "./../firebase/firebaseConfig";
+import { useAuth } from "../hooks/authContext";
 
 const Registro = () => {
+    const [nombre, cambiarNombre] = useState('');
     const [correo, cambiarCorreo] = useState('');
     const [password, cambiarPassword] = useState('');
     const [mensaje, cambiarMensaje] = useState('');
 
     const history = useNavigate();
+    const usuarioLogeado = useAuth();
+
+    useEffect(() => {
+        if(usuarioLogeado) {
+            history("/")
+        }
+    }, [usuarioLogeado, history])
 
     
     const handleSubmit = async (e) => {
         e.preventDefault();
-        if(correo === '' && password === '') {
+        if(correo === '' && 
+            password === '' &&
+            nombre === '') {
             cambiarMensaje('Los campos no pueden estar vacios');
             return;
         }
@@ -21,7 +32,11 @@ const Registro = () => {
             const infoUsuario = await createUserWithEmailAndPassword(auth, correo, password);
             console.log(infoUsuario.user.uid);
             const docuRef = doc(db, `usuarios/${infoUsuario.user.uid}`);
-            setDoc(docuRef, {correo:correo, photo:'man-300x300.png'})
+            setDoc(docuRef, {
+                nombre: nombre, 
+                correo:correo, 
+                photo:'man-300x300.png'
+            })
             history('/');
         } catch (error) {
             console.log(error.code);
@@ -45,10 +60,20 @@ const Registro = () => {
             <form action="" onSubmit={handleSubmit}>
                 <input 
                     type="text" 
+                    name="nombre" 
+                    id="nombre"
+                    value={nombre}
+                    onChange={(e) => cambiarNombre(e.target.value)}
+                    placeholder="Ingresa tu nombre"
+                />
+
+                <input 
+                    type="text" 
                     name="correo" 
                     id="correo"
                     value={correo}
                     onChange={(e) => cambiarCorreo(e.target.value)}
+                    placeholder="Ingresa tu correo"
                 />
 
                 <input 
@@ -57,6 +82,7 @@ const Registro = () => {
                     id="password"
                     value={password}
                     onChange={(e) => cambiarPassword(e.target.value)}
+                    placeholder="Ingresa tu password"
                 />
 
                 <button>Registrarse</button>

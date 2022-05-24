@@ -1,45 +1,55 @@
 import {  useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { storage, ref, getDownloadURL, auth, signOut} from "../firebase/firebaseConfig";
+import { storage, ref, getDownloadURL} from "../firebase/firebaseConfig";
 import { useAuth } from "../hooks/authContext";
 import useObtenerUsuarioLogeado from "../hooks/obtenerUsuarioLogeado";
+import ButtonCerrarSesion from "../componentes/ButtonCerrarSesion";
+import useObtenerLinks from "../hooks/obtenerLinks";
 
 const Inicio = () => {
     const [usuario, cambiarUsuario] = useState();
-    const history = useNavigate();
+    const [linksUsuario, cambiarLinksUsuario] = useState();
     const usuarioLogeado = useAuth();
     const datosUsuarioLogeado = useObtenerUsuarioLogeado(usuarioLogeado.usuario.uid);
+
+    const link = useObtenerLinks(usuarioLogeado.usuario.uid);
     
     useEffect(() => {
         const guardarDatosUsuario = async () => {
-            const url = await getDownloadURL(ref(storage, datosUsuarioLogeado.data().photo));
             if(datosUsuarioLogeado) {
+                const url = await getDownloadURL(ref(storage, datosUsuarioLogeado.data().photo));
                 cambiarUsuario({
+                    nombre: datosUsuarioLogeado.data().nombre,
                     correo: datosUsuarioLogeado.data().correo,
                     photo: url
                 });
+                
+                cambiarLinksUsuario(link);
             }
         }
+        // cambiarLinks()
 
         guardarDatosUsuario()
         
-    }, [datosUsuarioLogeado])
-
-    const cerrarSesion = () => {
-        try {
-            signOut(auth);
-            history('/iniciarsesion');
-        } catch (error) {
-            console.log(error)
-        }
-    }
-
-    
+    }, [datosUsuarioLogeado, link])
     return ( 
         <>
             <h1>Inicio</h1>
-            <img src={usuario && usuario.photo} alt="" />
-            <button onClick={cerrarSesion}>Cerrar sesion</button>
+            {usuario && 
+            <>
+                <img src={usuario.photo} alt="" />
+                <p>Nombre: {usuario.nombre}</p>
+            </>
+
+
+            }
+
+            {linksUsuario && 
+                linksUsuario.map((link) => {
+                    return <a href={link.facebook}>Facebook</a>
+                })
+            }
+            
+            <ButtonCerrarSesion />
         </>
         
     );
