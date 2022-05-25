@@ -10,16 +10,15 @@ const Inicio = () => {
     const [linksUsuario, cambiarLinksUsuario] = useState([]);
     const usuarioLogeado = useAuth();
     const datosUsuarioLogeado = useObtenerUsuarioLogeado(usuarioLogeado.usuario.uid);
-
     const link = useObtenerLinks(usuarioLogeado.usuario.uid);
     
     useEffect(() => {
         const guardarDatosUsuario = async () => {
             if(datosUsuarioLogeado) {
-                const url = await getDownloadURL(ref(storage, datosUsuarioLogeado.data().photo));
+                const url = await getDownloadURL(ref(storage, datosUsuarioLogeado.photo));
                 cambiarUsuario({
-                    nombre: datosUsuarioLogeado.data().nombre,
-                    correo: datosUsuarioLogeado.data().correo,
+                    nombre: datosUsuarioLogeado.nombre,
+                    correo: datosUsuarioLogeado.correo,
                     photo: url
                 });
                 

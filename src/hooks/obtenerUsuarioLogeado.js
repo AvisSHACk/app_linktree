@@ -9,7 +9,7 @@ const useObtenerUsuarioLogeado = (uid) => {
             const docSnap = await getDoc(docRef);
             
             if(docSnap.exists()) {
-                cambiarUsuarioLogeado(docSnap);
+                cambiarUsuarioLogeado(docSnap.data());
             };
         }
 
