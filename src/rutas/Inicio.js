@@ -7,7 +7,7 @@ import useObtenerLinks from "../hooks/obtenerLinks";
 
 const Inicio = () => {
     const [usuario, cambiarUsuario] = useState();
-    const [linksUsuario, cambiarLinksUsuario] = useState();
+    const [linksUsuario, cambiarLinksUsuario] = useState([]);
     const usuarioLogeado = useAuth();
     const datosUsuarioLogeado = useObtenerUsuarioLogeado(usuarioLogeado.usuario.uid);
 
@@ -26,7 +26,6 @@ const Inicio = () => {
                 cambiarLinksUsuario(link);
             }
         }
-        // cambiarLinks()
 
         guardarDatosUsuario()
         
@@ -38,16 +37,11 @@ const Inicio = () => {
             <>
                 <img src={usuario.photo} alt="" />
                 <p>Nombre: {usuario.nombre}</p>
-            </>
-
-
-            }
-
-            {linksUsuario && 
-                linksUsuario.map((link) => {
-                    return <a href={link.facebook}>Facebook</a>
-                })
-            }
+            </>}
+            
+            {linksUsuario.map((link) => {
+                return <a href={link.facebook}>Facebook</a>
+            })}
             
             <ButtonCerrarSesion />
         </>
