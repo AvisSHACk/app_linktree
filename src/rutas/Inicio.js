@@ -6,7 +6,7 @@ import ButtonCerrarSesion from "../componentes/ButtonCerrarSesion";
 import useObtenerLinks from "../hooks/obtenerLinks";
 
 const Inicio = () => {
-    const [usuario, cambiarUsuario] = useState();
+    const [usuario, cambiarUsuario] = useState([]);
 
     const usuarioLogeado = useAuth();
     const datosUsuarioLogeado = useObtenerUsuarioLogeado(usuarioLogeado.usuario.uid);
@@ -32,14 +32,12 @@ const Inicio = () => {
     return ( 
         <>
             <h1>Inicio</h1>
-            {usuario && 
-            <>
-                <img src={usuario.photo} alt="" />
-                <p>Nombre: {usuario.nombre}</p>
-                <p>Email: {usuario.correo}</p>
-            </>}
+
+            <img src={usuario.photo} alt="" />
+            <p>Nombre: {usuario.nombre}</p>
+            <p>Email: {usuario.correo}</p>
             
-            {links && links.map((link) => {
+            {links.map((link) => {
                 return <a href={link.facebook}>Facebook</a>
             })}
             

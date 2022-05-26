@@ -14,23 +14,6 @@ const useObtenerUsuarioLogeado = (uid) => {
         getUserCollection();
         
     }, [uid])
-    
-    
-
-
-    // useEffect(() => {
-
-    //     const obtenerUsuario = async () => {
-    //         const docRef = doc(db, `usuarios/${uid}`);
-    //         const docSnap = await getDoc(docRef);
-            
-    //         if(docSnap.exists()) {
-    //             cambiarUsuarioLogeado(docSnap.data());
-    //         };
-    //     }
-
-    //     obtenerUsuario()
-    // }, [uid])
 
     return usuario;
 }
