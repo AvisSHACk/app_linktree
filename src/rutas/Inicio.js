@@ -7,28 +7,28 @@ import useObtenerLinks from "../hooks/obtenerLinks";
 
 const Inicio = () => {
     const [usuario, cambiarUsuario] = useState();
-    const [linksUsuario, cambiarLinksUsuario] = useState([]);
+
     const usuarioLogeado = useAuth();
     const datosUsuarioLogeado = useObtenerUsuarioLogeado(usuarioLogeado.usuario.uid);
-    const link = useObtenerLinks(usuarioLogeado.usuario.uid);
-    
+    const links = useObtenerLinks(usuarioLogeado.usuario.uid);
+
     useEffect(() => {
-        const guardarDatosUsuario = async () => {
+
+        const getUserLogged = async () => {
+            const imagenProfileRef = ref(storage, 'man-300x300.png');
+            const urlImageProfile = await getDownloadURL(imagenProfileRef);
+
             if(datosUsuarioLogeado) {
-                const url = await getDownloadURL(ref(storage, datosUsuarioLogeado.photo));
                 cambiarUsuario({
-                    nombre: datosUsuarioLogeado.nombre,
                     correo: datosUsuarioLogeado.correo,
-                    photo: url
-                });
-                
-                cambiarLinksUsuario(link);
+                    nombre: datosUsuarioLogeado.nombre,
+                    photo: urlImageProfile
+                })
             }
         }
 
-        guardarDatosUsuario()
-        
-    }, [datosUsuarioLogeado, link])
+        getUserLogged();
+    }, [datosUsuarioLogeado])
     return ( 
         <>
             <h1>Inicio</h1>
@@ -36,9 +36,10 @@ const Inicio = () => {
             <>
                 <img src={usuario.photo} alt="" />
                 <p>Nombre: {usuario.nombre}</p>
+                <p>Email: {usuario.correo}</p>
             </>}
             
-            {linksUsuario.map((link) => {
+            {links && links.map((link) => {
                 return <a href={link.facebook}>Facebook</a>
             })}
             

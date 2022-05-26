@@ -10,7 +10,7 @@ const Registro = () => {
     const [mensaje, cambiarMensaje] = useState('');
 
     const history = useNavigate();
-    const usuarioLogeado = useAuth();
+    const {usuarioLogeado} = useAuth();
 
     useEffect(() => {
         if(usuarioLogeado) {

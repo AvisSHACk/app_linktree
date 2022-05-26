@@ -1,22 +1,38 @@
 import { useEffect, useState } from "react";
 import { db, getDoc, doc  } from "../firebase/firebaseConfig";
 const useObtenerUsuarioLogeado = (uid) => {
-    const [usuarioLogeado, cambiarUsuarioLogeado] = useState();
+    const [usuario, cambiarUsuario] = useState();
+
     useEffect(() => {
+        const getUserCollection = async () => {
+            const userRef = doc(db, `usuarios/${uid}`);
+            const usuarioCollection = await getDoc(userRef);
 
-        const obtenerUsuario = async () => {
-            const docRef = doc(db, `usuarios/${uid}`);
-            const docSnap = await getDoc(docRef);
-            
-            if(docSnap.exists()) {
-                cambiarUsuarioLogeado(docSnap.data());
-            };
+            cambiarUsuario(usuarioCollection.data());
         }
-
-        obtenerUsuario()
+        
+        getUserCollection();
+        
     }, [uid])
+    
+    
 
-    return usuarioLogeado;
+
+    // useEffect(() => {
+
+    //     const obtenerUsuario = async () => {
+    //         const docRef = doc(db, `usuarios/${uid}`);
+    //         const docSnap = await getDoc(docRef);
+            
+    //         if(docSnap.exists()) {
+    //             cambiarUsuarioLogeado(docSnap.data());
+    //         };
+    //     }
+
+    //     obtenerUsuario()
+    // }, [uid])
+
+    return usuario;
 }
  
 export default useObtenerUsuarioLogeado;

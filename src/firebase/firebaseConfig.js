@@ -1,9 +1,9 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 // TODO: Add SDKs for Firebase products that you want to use
-import {getFirestore, doc, setDoc, getDoc, query, collection, onSnapshot, where, limit} from "firebase/firestore";
-import { getStorage, ref, getDownloadURL } from "firebase/storage";
+import {getFirestore, doc, setDoc, getDoc, query, collection, onSnapshot, where, limit, addDoc} from "firebase/firestore";
 import {getAuth, createUserWithEmailAndPassword, signOut, signInWithEmailAndPassword, onAuthStateChanged  } from 'firebase/auth';
+import { getStorage, ref, getDownloadURL } from "firebase/storage";
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
@@ -22,4 +22,23 @@ const db = getFirestore(app);
 const storage = getStorage(app);
 const auth = getAuth();
 
-export {where, limit, auth, onAuthStateChanged, getDoc, createUserWithEmailAndPassword, signOut,signInWithEmailAndPassword, db, doc, setDoc, ref, getDownloadURL, storage, query, collection, onSnapshot };
+export {
+  db,
+  doc, 
+  setDoc, 
+  ref, 
+  getDownloadURL, 
+  storage, 
+  query, 
+  collection, 
+  onSnapshot, 
+  where, 
+  limit, 
+  auth, 
+  onAuthStateChanged, 
+  getDoc, 
+  createUserWithEmailAndPassword, 
+  signOut,
+  signInWithEmailAndPassword,
+  addDoc
+};
