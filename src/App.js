@@ -3,8 +3,9 @@ import RutaProtegida from "./componentes/rutaPrivada";
 import { AuthProvider } from "./hooks/authContext";
 import Dashboard from "./rutas/Dashboard";
 import Iniciarsesion from "./rutas/Iniciarsesion";
-import Inicio from "./rutas/Inicio";
+import EditProfile from "./rutas/EditProfile";
 import Registro from "./rutas/Registro";
+import Inicio from "./rutas/Inicio";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           
           <Route element={<RutaProtegida />}>
             <Route path="/" element={<Inicio/>}/>
+            <Route path="/editProfile/:id" element={<EditProfile/>}/>
             <Route path="/dashboard" element={<Dashboard/>}/>
           </Route>
         </Routes>

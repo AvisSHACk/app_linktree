@@ -2,15 +2,18 @@ import {  useEffect, useState } from "react";
 import { storage, ref, getDownloadURL} from "../firebase/firebaseConfig";
 import { useAuth } from "../hooks/authContext";
 import useObtenerUsuarioLogeado from "../hooks/obtenerUsuarioLogeado";
-import ButtonCerrarSesion from "../componentes/ButtonCerrarSesion";
 import useObtenerLinks from "../hooks/obtenerLinks";
+import { Link } from "react-router-dom";
 
 const Inicio = () => {
-    const [usuario, cambiarUsuario] = useState([]);
-
+    const [nombre, cambiarNombre] = useState('');
+    const [correo, cambiarCorreo] = useState('');
+    const [photo, cambiarPhoto] = useState('');
     const usuarioLogeado = useAuth();
     const datosUsuarioLogeado = useObtenerUsuarioLogeado(usuarioLogeado.usuario.uid);
     const links = useObtenerLinks(usuarioLogeado.usuario.uid);
+
+    console.log(links)
 
     useEffect(() => {
 
@@ -19,29 +22,28 @@ const Inicio = () => {
             const urlImageProfile = await getDownloadURL(imagenProfileRef);
 
             if(datosUsuarioLogeado) {
-                cambiarUsuario({
-                    correo: datosUsuarioLogeado.correo,
-                    nombre: datosUsuarioLogeado.nombre,
-                    photo: urlImageProfile
-                })
+                cambiarNombre(datosUsuarioLogeado.nombre);
+                cambiarCorreo(datosUsuarioLogeado.correo);
+                cambiarPhoto(urlImageProfile);
             }
         }
 
         getUserLogged();
     }, [datosUsuarioLogeado])
+
+    
     return ( 
         <>
             <h1>Inicio</h1>
 
-            <img src={usuario.photo} alt="" />
-            <p>Nombre: {usuario.nombre}</p>
-            <p>Email: {usuario.correo}</p>
-            
+            <img src={photo} alt="" />
+            <p>Nombre: {nombre}</p>
+            <p>Correo: {correo}</p>
             {links.map((link) => {
-                return <a href={link.facebook}>Facebook</a>
+                return <a href={link.url}>{link.titulo}</a>
             })}
-            
-            <ButtonCerrarSesion />
+
+            <Link to={`/editProfile/${usuarioLogeado.usuario.uid}`}>Editar perfil</Link>
         </>
         
     );
