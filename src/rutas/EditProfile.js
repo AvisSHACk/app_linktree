@@ -4,37 +4,29 @@ import { useAuth } from "../hooks/authContext";
 import useObtenerUsuarioLogeado from "../hooks/obtenerUsuarioLogeado";
 import ButtonCerrarSesion from "../componentes/ButtonCerrarSesion";
 import useObtenerLinks from "../hooks/obtenerLinks";
-import {  } from "firebase/firestore";
 
 const Inicio = () => {
-    const [usuario, cambiarUsuario] = useState([]);
-    const [nombre, cambiarNombre] = useState('');
-    const [correo, cambiarCorreo] = useState('');
-    const usuarioLogeado = useAuth();
-    const datosUsuarioLogeado = useObtenerUsuarioLogeado(usuarioLogeado.usuario.uid);
-    const links = useObtenerLinks(usuarioLogeado.usuario.uid);
+    const [nombre, cambiarNombre] = useState("");
+    const [correo, cambiarCorreo] = useState("");
+    const [photo, cambiarPhoto] = useState('');
+    const {usuario} = useAuth();
+    const datosUsuarioLogeado = useObtenerUsuarioLogeado();
+    const links = useObtenerLinks();
 
     
 
     useEffect(() => {
-
-        const getUserLogged = async () => {
-            const imagenProfileRef = ref(storage, 'man-300x300.png');
-            const urlImageProfile = await getDownloadURL(imagenProfileRef);
-
-            if(datosUsuarioLogeado) {
-                cambiarUsuario({
-                    correo: datosUsuarioLogeado.correo,
-                    nombre: datosUsuarioLogeado.nombre,
-                    photo: urlImageProfile
-                })
-
-                cambiarNombre(datosUsuarioLogeado.nombre);
-                cambiarCorreo(datosUsuarioLogeado.correo);
-            }
-        }
-        
         console.log(datosUsuarioLogeado)
+        if(datosUsuarioLogeado.length) {
+            cambiarNombre(datosUsuarioLogeado[0].nombre);
+            cambiarCorreo(datosUsuarioLogeado[0].correo);
+        }
+        const getUserLogged = async () => {
+                const imagenProfileRef = ref(storage, 'man-300x300.png');
+                const urlImageProfile = await getDownloadURL(imagenProfileRef);
+                cambiarPhoto(urlImageProfile)
+            
+        }
 
         getUserLogged();
     }, [datosUsuarioLogeado])
@@ -42,7 +34,7 @@ const Inicio = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         const editarGasto = async () => {
-            await updateDoc(doc(db, 'usuarios', usuarioLogeado.usuario.uid), {
+            await updateDoc(doc(db, 'usuarios', usuario.uid), {
                 correo: correo,
                 nombre: nombre,
             }).then(() => {
@@ -52,32 +44,37 @@ const Inicio = () => {
 
         editarGasto();
     }
+
+    const handleChange = (e) => {
+
+        if(e.target.name === "nombre") {
+            cambiarNombre(e.target.value);
+        } else if(e.target.name === "correo") {
+            cambiarCorreo(e.target.value);
+        }
+
+    }
     return ( 
         <>
             <h1>Inicio</h1>
-
-            <img src={usuario.photo} alt="" />
+            <img src={photo} alt="" />
             <form action="" onSubmit={handleSubmit}>
-                <label htmlFor="">
-                    Nombre:
+               
                     <input 
                         type="text" 
                         name="nombre"
                         id="nombre"
                         value={nombre}
-                        onChange={(e) => cambiarNombre(e.target.value)}
+                        onChange={handleChange}
                     />
-                </label>
-                <label htmlFor="">
-                    Correo:
+                
                     <input 
                         type="correo" 
                         name="correo"
                         id="correo"
                         value={correo}
-                        onChange={(e) => cambiarCorreo(e.target.value)}
+                        onChange={handleChange}
                     />
-                </label>
 
                 <button type="submit">Actualizar perfil</button>
             </form>

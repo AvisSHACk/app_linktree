@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { db, query, collection, onSnapshot, where  } from "../firebase/firebaseConfig";
-const useObtenerLinks = (uid) => {
+import { useAuth } from "../hooks/authContext";
+const useObtenerLinks = () => {
     const [links, cambiarLinks] = useState([]);
+    const {usuario} = useAuth();
 
     useEffect(() => {
-        const q = query(collection(db, 'links'), where('uid', '==', uid));
+        const q = query(collection(db, 'links'), where('uid', '==', usuario.uid));
 
         const onSuscribe = onSnapshot(q, 
             (snapshot) => {
@@ -13,7 +15,7 @@ const useObtenerLinks = (uid) => {
         )
 
         return onSuscribe;
-    }, [uid])
+    }, [usuario.uid])
 
     return links;
 }

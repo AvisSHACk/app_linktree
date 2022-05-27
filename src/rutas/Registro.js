@@ -10,13 +10,13 @@ const Registro = () => {
     const [mensaje, cambiarMensaje] = useState('');
 
     const history = useNavigate();
-    const {usuarioLogeado} = useAuth();
+    const {usuario} = useAuth();
 
     useEffect(() => {
-        if(usuarioLogeado) {
+        if(usuario) {
             history("/")
         }
-    }, [usuarioLogeado, history])
+    }, [usuario, history])
 
     
     const handleSubmit = async (e) => {

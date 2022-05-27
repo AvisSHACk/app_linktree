@@ -6,14 +6,10 @@ import useObtenerLinks from "../hooks/obtenerLinks";
 import { Link } from "react-router-dom";
 
 const Inicio = () => {
-    const [nombre, cambiarNombre] = useState('');
-    const [correo, cambiarCorreo] = useState('');
     const [photo, cambiarPhoto] = useState('');
-    const usuarioLogeado = useAuth();
-    const datosUsuarioLogeado = useObtenerUsuarioLogeado(usuarioLogeado.usuario.uid);
-    const links = useObtenerLinks(usuarioLogeado.usuario.uid);
-
-    console.log(links)
+    const {usuario} = useAuth();
+    const datosUsuarioLogeado = useObtenerUsuarioLogeado();
+    const links = useObtenerLinks();
 
     useEffect(() => {
 
@@ -21,15 +17,13 @@ const Inicio = () => {
             const imagenProfileRef = ref(storage, 'man-300x300.png');
             const urlImageProfile = await getDownloadURL(imagenProfileRef);
 
-            if(datosUsuarioLogeado) {
-                cambiarNombre(datosUsuarioLogeado.nombre);
-                cambiarCorreo(datosUsuarioLogeado.correo);
+            if(urlImageProfile) {
                 cambiarPhoto(urlImageProfile);
             }
         }
 
         getUserLogged();
-    }, [datosUsuarioLogeado])
+    }, [usuario])
 
     
     return ( 
@@ -37,13 +31,19 @@ const Inicio = () => {
             <h1>Inicio</h1>
 
             <img src={photo} alt="" />
-            <p>Nombre: {nombre}</p>
-            <p>Correo: {correo}</p>
+
+            {datosUsuarioLogeado.map((usuario) => (
+                <>
+                    <p>Nombre: {usuario.nombre}</p>
+                    <p>Correo: {usuario.correo}</p>
+                </>
+            ))}
+            
             {links.map((link) => {
                 return <a href={link.url}>{link.titulo}</a>
             })}
 
-            <Link to={`/editProfile/${usuarioLogeado.usuario.uid}`}>Editar perfil</Link>
+            <Link to={`/editProfile/${usuario.uid}`}>Editar perfil</Link>
         </>
         
     );
