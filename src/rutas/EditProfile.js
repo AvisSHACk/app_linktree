@@ -1,9 +1,9 @@
-import {  useEffect, useState } from "react";
+import {  useEffect, useRef, useState } from "react";
 import { storage, ref, getDownloadURL, updateDoc, doc, db} from "../firebase/firebaseConfig";
 import { useAuth } from "../hooks/authContext";
 import useObtenerUsuarioLogeado from "../hooks/obtenerUsuarioLogeado";
-import ButtonCerrarSesion from "../componentes/ButtonCerrarSesion";
 import useObtenerLinks from "../hooks/obtenerLinks";
+import { uploadBytes } from "firebase/storage";
 
 const Inicio = () => {
     const [nombre, cambiarNombre] = useState("");
@@ -12,7 +12,7 @@ const Inicio = () => {
     const {usuario} = useAuth();
     const datosUsuarioLogeado = useObtenerUsuarioLogeado();
     const links = useObtenerLinks();
-
+    const photoImage = useRef();
     
 
     useEffect(() => {
@@ -22,7 +22,7 @@ const Inicio = () => {
             cambiarCorreo(datosUsuarioLogeado[0].correo);
         }
         const getUserLogged = async () => {
-                const imagenProfileRef = ref(storage, 'man-300x300.png');
+                const imagenProfileRef = ref(storage, datosUsuarioLogeado[0].photo);
                 const urlImageProfile = await getDownloadURL(imagenProfileRef);
                 cambiarPhoto(urlImageProfile)
             
@@ -54,12 +54,52 @@ const Inicio = () => {
         }
 
     }
+
+    const changeClickPhoto = () => {
+        photoImage.current.click();
+    }
+
+    const changePhoto = async (e) => {
+
+        const files = e.target.files;
+        const fileReader = new FileReader();
+
+        if(fileReader && files && files.length > 0) {
+            fileReader.readAsArrayBuffer(files[0])
+            fileReader.onload = async () => {
+                const imageData = fileReader.result;
+
+                const photoRef = ref(storage, `images/${usuario.uid}`);
+
+                const res = await uploadBytes(photoRef, imageData);
+
+                if(res) {
+                    await updateDoc(doc(db, 'usuarios', usuario.uid), {
+                        photo: res.metadata.fullPath
+                    }).then(() => {
+                        console.log('Se actualizo el perfil');
+                    })
+
+                    const imagenProfileRef = ref(storage, datosUsuarioLogeado[0].photo);
+                    const urlImageProfile = await getDownloadURL(imagenProfileRef);
+                    cambiarPhoto(urlImageProfile)
+                }
+            }
+        }
+
+
+    }
+
+
     return ( 
         <>
-            <h1>Inicio</h1>
-            <img src={photo} alt="" />
+            <h1>Editar perfil</h1>
+            <div>
+                <img src={photo} alt="" />
+                <button onClick={changeClickPhoto}>Cambiar foto de perfil</button>
+                <input ref={photoImage} type="file" onChange={changePhoto}/>
+            </div>
             <form action="" onSubmit={handleSubmit}>
-               
                     <input 
                         type="text" 
                         name="nombre"
@@ -82,7 +122,7 @@ const Inicio = () => {
                 return <a href={link.url}>{link.titulo}</a>
             })}
             
-            <ButtonCerrarSesion />
+            
         </>
         
     );

@@ -4,6 +4,7 @@ import { useAuth } from "../hooks/authContext";
 import useObtenerUsuarioLogeado from "../hooks/obtenerUsuarioLogeado";
 import useObtenerLinks from "../hooks/obtenerLinks";
 import { Link } from "react-router-dom";
+import ButtonCerrarSesion from "../componentes/ButtonCerrarSesion";
 
 const Inicio = () => {
     const [photo, cambiarPhoto] = useState('');
@@ -44,6 +45,8 @@ const Inicio = () => {
             })}
 
             <Link to={`/editProfile/${usuario.uid}`}>Editar perfil</Link>
+
+            <ButtonCerrarSesion />
         </>
         
     );
