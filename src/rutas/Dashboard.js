@@ -3,6 +3,7 @@ import { addDoc, collection, db } from "./../firebase/firebaseConfig";
 import {useState } from "react";
 import useObtenerLinks from "../hooks/obtenerLinks";
 import { useAuth } from "../hooks/authContext";
+import Header from "../componentes/Header";
 
 const Dashboard = () => {
     const [titulo, cambiarTitulo] = useState('');
@@ -21,6 +22,8 @@ const Dashboard = () => {
     }
     return ( 
         <>
+            <Header />
+            <h2>Dashboard</h2>
             <form action="" onSubmit={handleSubmit}>
                 <input 
                     type="text" 
@@ -28,6 +31,7 @@ const Dashboard = () => {
                     id="titulo"
                     value={titulo}
                     onChange={(e) => cambiarTitulo(e.target.value)}
+                    placeholder="Titulo"
                 />
 
                 <input 
@@ -36,9 +40,10 @@ const Dashboard = () => {
                     id="url"
                     value={url}
                     onChange={(e) => cambiarUrl(e.target.value)}
+                    placeholder="Url"
                 />
 
-                <button>Guardar</button>
+                <button>Agregar enlace</button>
             </form>
 
             <div>

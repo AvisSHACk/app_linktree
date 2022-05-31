@@ -1,9 +1,11 @@
 import {  useEffect, useRef, useState } from "react";
-import { storage, ref, getDownloadURL, updateDoc, doc, db} from "../firebase/firebaseConfig";
+import { storage, ref, updateDoc, doc, db} from "../firebase/firebaseConfig";
 import { useAuth } from "../hooks/authContext";
 import useObtenerUsuarioLogeado from "../hooks/obtenerUsuarioLogeado";
 import useObtenerLinks from "../hooks/obtenerLinks";
 import { uploadBytes } from "firebase/storage";
+import obtenerFotoPerfil from "../firebase/obtenerFotoPerfil";
+import Header from "../componentes/Header";
 
 const Inicio = () => {
     const [nombre, cambiarNombre] = useState("");
@@ -16,19 +18,17 @@ const Inicio = () => {
     
 
     useEffect(() => {
-        console.log(datosUsuarioLogeado)
-        if(datosUsuarioLogeado.length) {
-            cambiarNombre(datosUsuarioLogeado[0].nombre);
-            cambiarCorreo(datosUsuarioLogeado[0].correo);
-        }
-        const getUserLogged = async () => {
-                const imagenProfileRef = ref(storage, datosUsuarioLogeado[0].photo);
-                const urlImageProfile = await getDownloadURL(imagenProfileRef);
-                cambiarPhoto(urlImageProfile)
-            
+        const profileView = async () => {
+            if(datosUsuarioLogeado.length) {
+                cambiarNombre(datosUsuarioLogeado[0].nombre);
+                cambiarCorreo(datosUsuarioLogeado[0].correo);
+                const urlImageProfile = await obtenerFotoPerfil(storage, datosUsuarioLogeado[0].photo);
+                cambiarPhoto(urlImageProfile);
+            }
         }
 
-        getUserLogged();
+        profileView();
+
     }, [datosUsuarioLogeado])
 
     const handleSubmit = (e) => {
@@ -80,9 +80,8 @@ const Inicio = () => {
                         console.log('Se actualizo el perfil');
                     })
 
-                    const imagenProfileRef = ref(storage, datosUsuarioLogeado[0].photo);
-                    const urlImageProfile = await getDownloadURL(imagenProfileRef);
-                    cambiarPhoto(urlImageProfile)
+                    const urlImageProfile = await obtenerFotoPerfil(storage, datosUsuarioLogeado[0].photo);
+                    cambiarPhoto(urlImageProfile);
                 }
             }
         }
@@ -93,7 +92,8 @@ const Inicio = () => {
 
     return ( 
         <>
-            <h1>Editar perfil</h1>
+            <Header />
+            <h2>Editar Perfil</h2>
             <div>
                 <img src={photo} alt="" />
                 <button onClick={changeClickPhoto}>Cambiar foto de perfil</button>

@@ -1,10 +1,12 @@
 import {  useEffect, useState } from "react";
-import { storage, ref, getDownloadURL} from "../firebase/firebaseConfig";
+import { storage} from "../firebase/firebaseConfig";
 import { useAuth } from "../hooks/authContext";
 import useObtenerUsuarioLogeado from "../hooks/obtenerUsuarioLogeado";
 import useObtenerLinks from "../hooks/obtenerLinks";
 import { Link } from "react-router-dom";
 import ButtonCerrarSesion from "../componentes/ButtonCerrarSesion";
+import obtenerFotoPerfil from "../firebase/obtenerFotoPerfil";
+import Header from "../componentes/Header";
 
 const Inicio = () => {
     const [photo, cambiarPhoto] = useState('');
@@ -15,12 +17,8 @@ const Inicio = () => {
     useEffect(() => {
 
         const getUserLogged = async () => {
-            const imagenProfileRef = ref(storage, 'man-300x300.png');
-            const urlImageProfile = await getDownloadURL(imagenProfileRef);
-
-            if(urlImageProfile) {
-                cambiarPhoto(urlImageProfile);
-            }
+            const urlImageProfile = await obtenerFotoPerfil(storage, 'man-300x300.png');
+            cambiarPhoto(urlImageProfile);
         }
 
         getUserLogged();
@@ -28,8 +26,9 @@ const Inicio = () => {
 
     
     return ( 
-        <>
-            <h1>Inicio</h1>
+        <>  
+            <Header />
+            <h2>Inicio</h2>
 
             <img src={photo} alt="" />
 
