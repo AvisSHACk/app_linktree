@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { auth, signInWithEmailAndPassword  } from "./../firebase/firebaseConfig";
+import { Contenedor, Formulario } from "../elementos/Formulario";
 
 const Iniciarsesion = () => {
     const [correo, cambiarCorreo] = useState('');
@@ -38,8 +39,10 @@ const Iniciarsesion = () => {
     }
     return ( 
         <>
+
+        <Contenedor>
+            <Formulario action="" onSubmit={handleSubmit}>
             <h1>Iniciar Sesion</h1>
-            <form action="" onSubmit={handleSubmit}>
                 <input 
                     type="text" 
                     name="correo" 
@@ -57,10 +60,13 @@ const Iniciarsesion = () => {
                 />
 
                 <button>Iniciar Sesion</button>
-            </form>
+            </Formulario>
             <div className="mensaje">{mensaje}</div>
+        </Contenedor>
         </>
      );
 }
+
+
  
 export default Iniciarsesion;

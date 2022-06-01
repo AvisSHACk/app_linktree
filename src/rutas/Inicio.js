@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import ButtonCerrarSesion from "../componentes/ButtonCerrarSesion";
 import obtenerFotoPerfil from "../firebase/obtenerFotoPerfil";
 import Header from "../componentes/Header";
+import { ContenedorLayout } from "../elementos/ContenedorLayout";
 
 const Inicio = () => {
     const [photo, cambiarPhoto] = useState('');
@@ -28,24 +29,29 @@ const Inicio = () => {
     return ( 
         <>  
             <Header />
-            <h2>Inicio</h2>
 
-            <img src={photo} alt="" />
+                <div className="contenedorLayout">
+                    <ContenedorLayout>
+                        <h2>Inicio</h2>
 
-            {datosUsuarioLogeado.map((usuario) => (
-                <>
-                    <p>Nombre: {usuario.nombre}</p>
-                    <p>Correo: {usuario.correo}</p>
-                </>
-            ))}
-            
-            {links.map((link) => {
-                return <a href={link.url}>{link.titulo}</a>
-            })}
+                        <img src={photo} alt="" />
 
-            <Link to={`/editProfile/${usuario.uid}`}>Editar perfil</Link>
+                        {datosUsuarioLogeado.map((usuario) => (
+                            <>
+                                <p>Nombre: {usuario.nombre}</p>
+                                <p>Correo: {usuario.correo}</p>
+                            </>
+                        ))}
+                        
+                        {links.map((link) => {
+                            return <a href={link.url}>{link.titulo}</a>
+                        })}
 
-            <ButtonCerrarSesion />
+                        <Link to={`/editProfile/${usuario.uid}`}>Editar perfil</Link>
+
+                        <ButtonCerrarSesion />
+                    </ContenedorLayout>
+                </div>
         </>
         
     );

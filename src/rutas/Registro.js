@@ -56,38 +56,41 @@ const Registro = () => {
     }
     return ( 
         <>
-            <h1>Registro</h1>
-            <form action="" onSubmit={handleSubmit}>
-                <input 
-                    type="text" 
-                    name="nombre" 
-                    id="nombre"
-                    value={nombre}
-                    onChange={(e) => cambiarNombre(e.target.value)}
-                    placeholder="Ingresa tu nombre"
-                />
 
-                <input 
-                    type="text" 
-                    name="correo" 
-                    id="correo"
-                    value={correo}
-                    onChange={(e) => cambiarCorreo(e.target.value)}
-                    placeholder="Ingresa tu correo"
-                />
+            <div className="container">
+                <h1>Registro</h1>
+                <form action="" onSubmit={handleSubmit}>
+                    <input 
+                        type="text" 
+                        name="nombre" 
+                        id="nombre"
+                        value={nombre}
+                        onChange={(e) => cambiarNombre(e.target.value)}
+                        placeholder="Ingresa tu nombre"
+                    />
 
-                <input 
-                    type="password" 
-                    name="password" 
-                    id="password"
-                    value={password}
-                    onChange={(e) => cambiarPassword(e.target.value)}
-                    placeholder="Ingresa tu password"
-                />
+                    <input 
+                        type="text" 
+                        name="correo" 
+                        id="correo"
+                        value={correo}
+                        onChange={(e) => cambiarCorreo(e.target.value)}
+                        placeholder="Ingresa tu correo"
+                    />
 
-                <button>Registrarse</button>
-            </form>
-            <div className="mensaje">{mensaje}</div>
+                    <input 
+                        type="password" 
+                        name="password" 
+                        id="password"
+                        value={password}
+                        onChange={(e) => cambiarPassword(e.target.value)}
+                        placeholder="Ingresa tu password"
+                    />
+
+                    <button>Registrarse</button>
+                </form>
+                <div className="mensaje">{mensaje}</div>
+            </div>
         </>
      );
 }
